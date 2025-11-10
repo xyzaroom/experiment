@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Black-White-Grey Page</title>
+<style>
+  /* Reset & base styles */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: Arial, sans-serif; background: #111; color: #eee; overflow-x: hidden; }
+
+  /* Container */
+  .container { max-width: 1200px; margin: 0 auto; padding: 50px 20px; }
+
+  /* Fade-in */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeIn 1.2s forwards;
+  }
+  @keyframes fadeIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Ghost fade */
+  .ghost-fade {
+    opacity: 0.05;
+    transition: opacity 1.5s ease;
+  }
+  .ghost-fade.visible { opacity: 1; }
+
+  /* Blur reveal */
+  .blur-reveal {
+    filter: blur(10px);
+    opacity: 0;
+    transition: all 1.5s ease;
+  }
+  .blur-reveal.visible {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  /* Parallax effect */
+  .parallax {
+    background: url('https://picsum.photos/1200/600?grayscale') no-repeat center center/cover;
+    min-height: 60vh;
+    transform: translateY(0);
+    transition: transform 0.2s ease-out;
+  }
+
+  /* Zoom in smooth */
+  .zoom-in {
+    transform: scale(0.9);
+    opacity: 0;
+    transition: all 1s ease;
+  }
+  .zoom-in.visible {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  h1, h2, p {
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="parallax"></div>
+
+<div class="container">
+  <h1 class="fade-in">Welcome to My Minimal Page</h1>
+  <p class="blur-reveal">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque imperdiet ligula ut lectus fermentum.</p>
+
+  <h2 class="ghost-fade">Ghost Fade Section</h2>
+  <p class="zoom-in">Smooth zoom-in effect with minimal style. Fusce vehicula justo vitae neque faucibus, nec bibendum ligula fermentum.</p>
+
+  <img src="https://picsum.photos/800/400?grayscale" alt="Free placeholder" class="fade-in">
+</div>
+
+<script>
+  // Observer for scroll effects
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+
+  document.querySelectorAll('.blur-reveal, .ghost-fade, .zoom-in').forEach(el => {
+    observer.observe(el);
+  });
+
+  // Minimal parallax effect
+  window.addEventListener('scroll', () => {
+    const parallax = document.querySelector('.parallax');
+    parallax.style.transform = `translateY(${window.scrollY * 0.3}px)`;
+  });
+</script>
+
+</body>
+</html>
