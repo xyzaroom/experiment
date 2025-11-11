@@ -328,7 +328,15 @@
   
   /* Scroll Snap for Mobile */  
   html { scroll-snap-type: y mandatory; }  
-  .section, .divider { scroll-snap-align: start; }  
+  .section, .divider { scroll-snap-align: start; }
+  
+  /* === MOBILE SCROLL FIX === */
+footer {
+  scroll-snap-align: none; /* Prevent footer from being forced by scroll snap */
+}
+.section:last-of-type {
+  padding-bottom: 150px; /* Add extra space so footer scrolls into view */
+}
 </style>  
 </head>  
 <body>  
