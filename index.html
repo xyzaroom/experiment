@@ -6,6 +6,24 @@
 <title>Xyzaroom Records | Cinematic Monochrome</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 <style>
+  /* PATCH RESPONSIF — STYLE */
+@media (max-width: 768px) {
+  .section { padding: 60px 15px; min-height: 80vh; }
+  h1 { font-size: 2.5rem !important; }
+  h2 { font-size: 2rem !important; }
+  .hero-content p { font-size: 1rem !important; }
+  .service-grid, .about-grid, .footer-grid { grid-template-columns: 1fr !important; gap: 25px; }
+  .service-card, .about-card { padding: 25px 20px; }
+  header { padding: 12px 4% !important; }
+  .logo { font-size: 1.5rem !important; }
+  nav a { font-size: 0.85rem; margin: 0 8px; }
+}
+@media (max-width: 480px) {
+  h1 { font-size: 2rem !important; }
+  .hero-content p { font-size: 0.95rem !important; }
+  .section { padding: 50px 10px; }
+}
+  
   /* Reset */
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
