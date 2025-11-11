@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Xyzaroom Records | Cinematic Monochrome</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<style>
+  /* Reset */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* Base */
+  body { 
+    font-family: 'Helvetica Neue', Arial, sans-serif; 
+    background: #000; 
+    color: #eee; 
+    line-height: 1.6; 
+    overflow-x: hidden; 
+    position: relative;
+    min-height: 100vh;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* Canvas for Particles */
+  #particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+  /* Cursor Trail */
+  .cursor-trail { position: absolute; width: 6px; height: 6px; background: #fff; border-radius: 50%; pointer-events: none; z-index: 9999; opacity: 0.6; transform: translate(-50%, -50%); transition: opacity 0.3s ease; }
+  .cursor-trail.fade { opacity: 0; }
+
+  /* Scroll Progress Bar */
+  #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: #fff; width: 0%; z-index: 1001; transition: width 0.1s ease; }
+
+  /* Container Sections */
+  .section { 
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    text-align: center; 
+    padding: 80px 20px; 
+    position: relative; 
+    overflow: hidden; 
+  }
+
+  /* Last section padding-bottom to avoid footer overlap */
+  .section:last-of-type { padding-bottom: 150px; }
+
+  /* Background overlay */
+  .section::before { 
+    content: ''; 
+    position: absolute; 
+    top:0; left:0; width:100%; height:100%; 
+    background: rgba(0,0,0,0.6); 
+    z-index:1; 
+  }
+
+  /* Titles & text */
+  h1, h2, h3 { 
+    font-weight: 300; 
+    z-index:2; 
+    position: relative; 
+    margin-bottom: 20px; 
+    letter-spacing: 1px;
+  }
+  p { 
+    max-width: 800px; 
+    margin: 10px auto 30px auto; 
+    z-index:2; 
+    position: relative; 
+    font-size: 1.1rem;
+  }
+
+  /* Effects */
+  .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.8s forwards; }
+  @keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
+
+  .ghost-fade { opacity: 0.03; transition: opacity 2.2s ease; }
+  .ghost-fade.visible { opacity: 1; }
+
+  .blur-reveal { filter: blur(20px); opacity: 0; transition: all 2s ease; }
+  .blur-reveal.visible { filter: blur(0); opacity: 1; }
+
+  .zoom-in { transform: scale(0.85); opacity: 0; transition: all 1.5s ease; }
+  .zoom-in.visible { transform: scale(1); opacity:1; }
+
+  /* Parallax */
+  .parallax { 
+    position: absolute; top:0; left:0; width:100%; height:100%; 
+    background-size: cover; background-position: center; 
+    z-index:0; 
+    transform: translateY(0); 
+    transition: transform 0.25s ease-out; 
+    filter: grayscale(100%) brightness(0.7);
+  }
+
+  /* Overlay gradient */
+  .gradient-overlay { 
+    position:absolute; top:0; left:0; width:100%; height:100%; 
+    background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6)); 
+    z-index:1; 
+  }
+
+  /* Footer */
+  footer {
+    background: #000;
+    color: #aaa;
+    padding: 60px 5% 40px;
+    font-family: Arial, sans-serif;
+    width: 100%;
+  }
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    margin: 0 auto 50px;
+  }
+  .footer-column { flex: 1; min-width: 200px; margin: 20px 0; }
+  .footer-column h4 { color: #fff; font-size: 1.1rem; margin-bottom: 20px; font-weight: 700; }
+  .footer-column a { display: block; color: #aaa; margin: 10px 0; text-decoration: none; transition: 0.3s; }
+  .footer-column a:hover { color: #fff; }
+  .footer-bottom { text-align: center; border-top: 1px solid #333; padding-top: 30px; width: 100%; }
+  .social-icons { margin-bottom: 20px; }
+  .social-icons a { color: #fff; margin: 0 18px; font-size: 1.7rem; text-decoration: none; transition: 0.3s; }
+  .social-icons a:hover { color: #ccc; }
+  .footer-bottom p { margin: 15px 0; color: #666; font-size: 0.9rem; }
+  .legal-links { display: flex; justify-content: center; gap: 30px; flex-wrap: wrap; }
+  .legal-links a { color: #666; font-size: 0.9rem; text-decoration: none; }
+  .legal-links a:hover { color: #fff; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .section { padding: 60px 15px; min-height: auto; }
+    .footer-container { flex-direction: column; align-items: center; }
+  }
+
+  /* Remove scroll-snap for footer */
+  footer { scroll-snap-align: none; }
+</style>
+</head>
+<body>
+
+<!-- Progress Bar -->
+<div id="progress-bar"></div>
+
+<!-- Canvas -->
+<canvas id="particles"></canvas>
+
+<!-- HEADER -->
+<header id="header">
+  <div class="logo fade-in">XYZAROOM</div>
+  <nav class="desktop-nav">
+    <a href="#hero" class="fade-in">Home</a>
+    <a href="#about" class="fade-in">About</a>
+    <a href="#service" class="fade-in">Services</a>
+    <a href="#footer" class="fade-in">Contact</a>
+  </nav>
+  <div class="mobile-toggle" onclick="toggleMobileNav()">Menu</div>
+</header>
+
+<!-- Mobile Nav -->
+<nav class="mobile-nav" id="mobileNav">
+  <a href="#hero">Home</a>
+  <a href="#about">About</a>
+  <a href="#service">Services</a>
+  <a href="#footer">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero" class="section">
+  <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+  <div class="gradient-overlay"></div>
+  <div class="hero-content">
+    <h1 class="blur-reveal glitch">Music Distribution<br>For The New Era</h1>
+    <p class="ghost-fade">Independent label support • Global publishing • Innovative release tools • Full artist control</p>
+    <p class="zoom-in">Xyzaroom Records Inc. — Established 2018 in Sukabumi, Indonesia. Subsidiary of Algoritma Music Group.</p>
+    <p class="fade-in">From bedroom producers to stadium headliners — we deliver your sound to the world.</p>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="section">
+  <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+  <div class="gradient-overlay"></div>
+  <h2 class="fade-in">About Xyzaroom Records</h2>
+  <p class="blur-reveal">Founded in 2018 in Parungkuda, Sukabumi, Xyzaroom Records empowers artists with cutting-edge tools and global reach.</p>
+  <p class="ghost-fade">Every artist deserves transparency, control, and fair revenue — no gatekeepers, no hidden fees.</p>
+</section>
+
+<!-- SERVICE -->
+<section id="service" class="section">
+  <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
+  <div class="gradient-overlay"></div>
+  <h2 class="ghost-fade">Our Services</h2>
+  <p class="zoom-in">End-to-end solutions for modern artists and labels</p>
+</section>
+
+<!-- FOOTER -->
+<footer id="footer">
+  <div class="footer-container">
+    <div class="footer-column">
+      <h4>Company</h4>
+      <a href="#">About Us</a>
+      <a href="#">Careers</a>
+      <a href="#">Press</a>
+      <a href="#">News</a>
+      <a href="#">Contact</a>
+    </div>
+    <div class="footer-column">
+      <h4>Services</h4>
+      <a href="#">Music Distribution</a>
+      <a href="#">Playlist Pitching</a>
+      <a href="#">Sync Licensing</a>
+      <a href="#">Publishing</a>
+      <a href="#">Xyzaroom Plus</a>
+    </div>
+    <div class="footer-column">
+      <h4>Resources</h4>
+      <a href="#">Help Center</a>
+      <a href="#">Blog</a>
+      <a href="#">Pricing</a>
+      <a href="#">Free Sign Up</a>
+      <a href="#">Login</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="social-icons">
+      <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-facebook-f"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
+      <a href="#" target="_blank"><i class="fab fa-spotify"></i></a>
+    </div>
+    <p><strong>© 2025 Xyzaroom Records Inc. All rights reserved.</strong></p>
+    <div class="legal-links">
+      <a href="#"><strong>Privacy Policy</strong></a>
+      <a href="#"><strong>Terms & Conditions</strong></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile Nav Toggle
+  function toggleMobileNav() {
+    document.getElementById('mobileNav').classList.toggle('open');
+  }
+
+  // Intersection Observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); } });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.blur-reveal, .ghost-fade, .zoom-in, .fade-in').forEach(el => observer.observe(el));
+
+  // Parallax & scroll
+  window.addEventListener('scroll', () => {
+    const scrolled = window.pageYOffset;
+    document.querySelectorAll('.parallax').forEach(p => p.style.transform = `translateY(${scrolled*0.35}px)`);
+  });
+</script>
+
+</body>
+</html>
