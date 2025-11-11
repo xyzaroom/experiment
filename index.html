@@ -18,6 +18,8 @@
     overflow-x: hidden; 
     position: relative;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   a { color: inherit; text-decoration: none; }
 
@@ -31,7 +33,7 @@
   /* Scroll Progress Bar */
   #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: #fff; width: 0%; z-index: 1001; transition: width 0.1s ease; }
 
-  /* Container Sections */
+  /* Container */
   .section { 
     min-height: 100vh; 
     display: flex; 
@@ -43,9 +45,6 @@
     position: relative; 
     overflow: hidden; 
   }
-
-  /* Last section padding-bottom to avoid footer overlap */
-  .section:last-of-type { padding-bottom: 150px; }
 
   /* Background overlay */
   .section::before { 
@@ -72,16 +71,19 @@
     font-size: 1.1rem;
   }
 
-  /* Effects */
+  /* Fade-in */
   .fade-in { opacity: 0; transform: translateY(30px); animation: fadeIn 1.8s forwards; }
   @keyframes fadeIn { to { opacity:1; transform: translateY(0); } }
 
+  /* Ghost fade */
   .ghost-fade { opacity: 0.03; transition: opacity 2.2s ease; }
   .ghost-fade.visible { opacity: 1; }
 
+  /* Blur reveal */
   .blur-reveal { filter: blur(20px); opacity: 0; transition: all 2s ease; }
   .blur-reveal.visible { filter: blur(0); opacity: 1; }
 
+  /* Zoom smooth */
   .zoom-in { transform: scale(0.85); opacity: 0; transition: all 1.5s ease; }
   .zoom-in.visible { transform: scale(1); opacity:1; }
 
@@ -102,6 +104,92 @@
     z-index:1; 
   }
 
+  /* Header */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 20px 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    transition: all 0.4s ease;
+  }
+  header.scrolled { background: rgba(0,0,0,0.95); padding: 15px 5%; }
+  .logo { font-size: 1.8rem; font-weight: 200; letter-spacing: 3px; }
+
+  /* Desktop Nav */
+  .desktop-nav { display: flex; }
+  .desktop-nav a { margin: 0 15px; font-size: 0.95rem; position: relative; }
+  .desktop-nav a::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 0; height: 1px; background: #fff; transition: width 0.4s; }
+  .desktop-nav a:hover::after { width: 100%; }
+
+  /* Mobile Menu Toggle */
+  .mobile-toggle { display: none; font-size: 1.6rem; cursor: pointer; }
+
+  /* Mobile Nav */
+  .mobile-nav {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(0,0,0,0.98);
+    padding: 80px 30px 40px;
+    transition: right 0.4s ease;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .mobile-nav.open { right: 0; }
+  .mobile-nav a {
+    margin: 15px 0;
+    font-size: 1.2rem;
+    width: 100%;
+    text-align: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #222;
+  }
+  .mobile-nav a:last-child { border-bottom: none; }
+
+  /* Glitch Effect */
+  .glitch { 
+    position: relative; 
+    animation: glitch 3s infinite alternate-reverse; 
+  }
+  @keyframes glitch {
+    0% { text-shadow: 0.05em 0 0 #fff, -0.05em 0 0 #fff; }
+    15% { text-shadow: 0.05em 0 0 #fff, -0.05em 0 0 #fff; }
+    16% { text-shadow: -0.05em -0.025em 0 #fff, 0.025em 0.035em 0 #fff; }
+    49% { text-shadow: -0.05em -0.025em 0 #fff, 0.025em 0.035em 0 #fff; }
+    50% { text-shadow: 0.025em 0.035em 0 #fff, 0.05em 0 0 #fff; }
+    99% { text-shadow: 0.025em 0.035em 0 #fff, 0.05em 0 0 #fff; }
+    100% { text-shadow: -0.025em 0 0 #fff, -0.05em 0 0 #fff; }
+  }
+
+  /* Section Divider SVG */
+  .divider { width: 100%; height: 60px; position: relative; overflow: hidden; }
+  .divider svg { position: absolute; bottom: 0; width: 100%; height: 100px; fill: #000; }
+
+  /* About & Service Grids */
+  #about .about-grid, #service .service-grid { max-width: 1200px; margin-top: 40px; z-index: 2; }
+  #about .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+  #service .service-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+
+  .about-card, .service-card {
+    background: rgba(255,255,255,0.03);
+    padding: 30px;
+    border-radius: 12px;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .service-card:hover { transform: translateY(-12px); background: rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+
   /* Footer */
   footer {
     background: #000;
@@ -110,13 +198,7 @@
     font-family: Arial, sans-serif;
     width: 100%;
   }
-  .footer-container {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    max-width: 1200px;
-    margin: 0 auto 50px;
-  }
+  .footer-container { display: flex; justify-content: space-between; flex-wrap: wrap; max-width: 1200px; margin: 0 auto 50px; }
   .footer-column { flex: 1; min-width: 200px; margin: 20px 0; }
   .footer-column h4 { color: #fff; font-size: 1.1rem; margin-bottom: 20px; font-weight: 700; }
   .footer-column a { display: block; color: #aaa; margin: 10px 0; text-decoration: none; transition: 0.3s; }
@@ -131,13 +213,25 @@
   .legal-links a:hover { color: #fff; }
 
   /* Responsive */
-  @media (max-width: 768px) {
-    .section { padding: 60px 15px; min-height: auto; }
-    .footer-container { flex-direction: column; align-items: center; }
+  @media (max-width: 992px) { #about .about-grid, .footer-container { display: block; } }
+  @media (max-width: 768px) { 
+    .section { padding: 60px 15px; min-height: 80vh; }
+    .service-grid, .about-grid { grid-template-columns: 1fr !important; gap: 25px; }
+    .service-card, .about-card { padding: 25px 20px; }
+    header { padding: 12px 4% !important; }
+    .desktop-nav { display: none; }
+    .mobile-toggle { display: block; }
+    .footer-container { padding: 0 5%; }
   }
+  @media (max-width: 480px) { .section { padding: 50px 10px; } }
 
-  /* Remove scroll-snap for footer */
-  footer { scroll-snap-align: none; }
+  /* Scroll Snap */
+  html { scroll-snap-type: y mandatory; }
+  .section, .divider { scroll-snap-align: start; }
+
+  /* ==================== MINIMAL FOOTER FIX ==================== */
+  .section:last-of-type { padding-bottom: 150px; } /* prevent overlap on mobile */
+  footer { scroll-snap-align: none; } /* prevent snapping */
 </style>
 </head>
 <body>
@@ -168,33 +262,37 @@
   <a href="#footer">Contact</a>
 </nav>
 
-<!-- HERO -->
+<!-- HERO, ABOUT, SERVICE, etc. -->
 <section id="hero" class="section">
   <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1514525253161-7a46d19cd819?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
   <div class="gradient-overlay"></div>
   <div class="hero-content">
     <h1 class="blur-reveal glitch">Music Distribution<br>For The New Era</h1>
     <p class="ghost-fade">Independent label support • Global publishing • Innovative release tools • Full artist control</p>
-    <p class="zoom-in">Xyzaroom Records Inc. — Established 2018 in Sukabumi, Indonesia. Subsidiary of Algoritma Music Group.</p>
+    <p class="zoom-in">Xyzaroom Records Inc. — Established 2018 in Sukabumi, Indonesia. Subsidiary of Algoritma Music Group. Empowering creators since day one.</p>
     <p class="fade-in">From bedroom producers to stadium headliners — we deliver your sound to the world.</p>
   </div>
 </section>
 
-<!-- ABOUT -->
 <section id="about" class="section">
   <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
   <div class="gradient-overlay"></div>
   <h2 class="fade-in">About Xyzaroom Records</h2>
-  <p class="blur-reveal">Founded in 2018 in Parungkuda, Sukabumi, Xyzaroom Records empowers artists with cutting-edge tools and global reach.</p>
-  <p class="ghost-fade">Every artist deserves transparency, control, and fair revenue — no gatekeepers, no hidden fees.</p>
+  <p class="blur-reveal">Founded in 2018 in Parungkuda, Sukabumi, Xyzaroom Records is Indonesia's pioneering independent music distribution platform. Acquired by Algoritma Music Group in 2019, we empower artists with cutting-edge tools and global reach.</p>
+  <p class="ghost-fade">We believe every artist deserves transparency, control, and fair revenue — no gatekeepers, no hidden fees.</p>
+  <div class="about-grid">
+    <!-- your about cards -->
+  </div>
 </section>
 
-<!-- SERVICE -->
 <section id="service" class="section">
   <div class="parallax" style="background-image: url('https://images.unsplash.com/photo-1511379938547-c1f69419868d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');"></div>
   <div class="gradient-overlay"></div>
   <h2 class="ghost-fade">Our Services</h2>
   <p class="zoom-in">End-to-end solutions for modern artists and labels</p>
+  <div class="service-grid">
+    <!-- your service cards -->
+  </div>
 </section>
 
 <!-- FOOTER -->
@@ -243,22 +341,8 @@
 
 <script>
   // Mobile Nav Toggle
-  function toggleMobileNav() {
-    document.getElementById('mobileNav').classList.toggle('open');
-  }
+  function toggleMobileNav() { document.getElementById('mobileNav').classList.toggle('open'); }
 
-  // Intersection Observer
+  // Intersection Observer for fade/blur/zoom
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); } });
-  }, { threshold: 0.15 });
-  document.querySelectorAll('.blur-reveal, .ghost-fade, .zoom-in, .fade-in').forEach(el => observer.observe(el));
-
-  // Parallax & scroll
-  window.addEventListener('scroll', () => {
-    const scrolled = window.pageYOffset;
-    document.querySelectorAll('.parallax').forEach(p => p.style.transform = `translateY(${scrolled*0.35}px)`);
-  });
-</script>
-
-</body>
-</html>
